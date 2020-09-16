@@ -1,6 +1,8 @@
+/* eslint-disable */
 import React,{useEffect,useState,useContext} from 'react'
 import {UserContext} from '../../App'
 import "./Profile.css"
+import { json } from 'body-parser'
 
 const Profile  = ()=>{
     const [mypics,setPics] = useState([])
@@ -13,7 +15,7 @@ const Profile  = ()=>{
            }
        }).then(res=>res.json())
        .then(result=>{
-           console.log(result)
+          //  console.log(result)
            setPics(result.mypost)
        })
     },[])
@@ -22,31 +24,31 @@ const Profile  = ()=>{
        if(image){
         const data = new FormData()
         data.append("file",image)
-        data.append("upload_preset","insta-clone")
-        data.append("cloud_name","cnq")
-        fetch("https://api.cloudinary.com/v1_1/cnq/image/upload",{
+         data.append("upload_preset","insta")
+         data.append("cloud_name","aniketjha172")
+         fetch("https://api.cloudinary.com/v1_1/aniketjha172/image/upload",{
             method:"post",
             body:data
         })
         .then(res=>res.json())
         .then(data=>{
-           fetch('/updatepic',{
-               method:"put",
-               headers:{
-                   "Content-Type":"application/json",
-                   "Authorization":"Bearer "+localStorage.getItem("jwt")
-               },
-               body:JSON.stringify({
-                   pic:data.url
-               })
-           }).then(res=>res.json())
-           .then(result=>{
-               console.log(result)
-               localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
-               dispatch({type:"UPDATEPIC",payload:result.pic})
-               //window.location.reload()
-           })
-       
+          // console.log(data)
+          localStorage.setItem("user",JSON.stringify({...state,pic:data.url}))
+          dispatch({ type:"UPDATEPIC",payload:data.url})
+          fetch("/updatepic",{
+            method:"put",
+            headers:{
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("jwt")
+            },body:JSON.stringify({
+              pic:data.url
+            })
+          }).then(res=>res.json())
+          .then(result=>{
+            console.log(result)
+            localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
+            dispatch({ type:"UPDATEPIC",payload:result.pic})
+          })
         })
         .catch(err=>{
             console.log(err)
@@ -63,11 +65,27 @@ const Profile  = ()=>{
        <div className="profile_details">
          <div className="row">
            <div className="col-4">
-             <img
-               className="profile_image"
-               alt="profilepic"
-               src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
-             />
+            <div className="row">
+              <div className="col">
+                 <img
+                   className="profile_image"
+                   alt="profilepic"
+                   src={state ? state.pic : ""}
+                 />
+              </div>
+            </div>
+            <div className="row">
+               <div className="col">
+                 <input
+                   type="file"
+                   className="form-control-file"
+                   id="exampleFormControlFile1"
+                   onChange={(e) => updatePhoto(e.target.files[0])}
+                 />
+                </div>
+            </div>
+             
+              
            </div>
            <div className="col-8">
              <div className="row">

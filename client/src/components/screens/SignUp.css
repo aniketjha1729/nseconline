@@ -5,5 +5,15 @@
     max-width: 400px;
     border-radius: 10px;
     box-shadow: 5px 10px 20px #888888
+}
 
+label{
+    color: black;
+    height: 40px;
+    width: 150px;
+    background-color: #0879FA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;   
 }

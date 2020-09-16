@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React,{useEffect,createContext,useReducer,useContext} from 'react';
 import NavBar from './components/Navbar'
 import "./App.css"

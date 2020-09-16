@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React,{useEffect,useState,useContext} from 'react'
 import {UserContext} from '../../App'
 import {useParams} from 'react-router-dom'
@@ -68,7 +69,7 @@ const Profile  = ()=>{
              localStorage.setItem("user",JSON.stringify(data))
             
              setProfile((prevState)=>{
-                const newFollower = prevState.user.followers.filter(item=>item != data._id )
+                const newFollower = prevState.user.followers.filter(item=>item !== data._id )
                  return {
                      ...prevState,
                      user:{
@@ -89,7 +90,7 @@ const Profile  = ()=>{
              <div className="row">
                <div className="col-4">
                  <img
-                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
+                   src={userProfile.user.pic}
                    alt=""
                    className="profile_image"
                  />

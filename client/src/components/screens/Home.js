@@ -1,18 +1,21 @@
+/* eslint-disable */
 import React,{useState,useEffect,useContext} from 'react'
 import {UserContext} from '../../App'
 import {Link} from 'react-router-dom'
 import "./Home.css"
 import M from 'materialize-css'
-import { useHistory } from 'react-router-dom'
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import {IconButton } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import useLoader from "../Loader/useLoader";
 const Home  = ()=>{
     const [data,setData] = useState([])
-    const [loading, setLoading] = useState(false)
     const {state,dispatch} = useContext(UserContext)
-    const history = useHistory()
-    const [title, setTitle] = useState("")
     const [body, setBody] = useState("")
     const [image, setImage] = useState("")
     const [url, setUrl] = useState("")
+    const [loader, showLoader, hideLoader] = useLoader();
     useEffect(()=>{
         
        fetch('/allpost',{
@@ -42,7 +45,7 @@ const Home  = ()=>{
           .then(result=>{
                    //   console.log(result)
             const newData = data.map(item=>{
-                if(item._id==result._id){
+                if(item._id===result._id){
                     return result
                 }else{
                     return item
@@ -68,7 +71,7 @@ const Home  = ()=>{
           .then(result=>{
             //   console.log(result)
             const newData = data.map(item=>{
-                if(item._id==result._id){
+                if(item._id===result._id){
                     return result
                 }else{
                     return item
@@ -95,7 +98,7 @@ const Home  = ()=>{
           .then(result=>{
             //   console.log(result)
               const newData = data.map(item=>{
-                if(item._id==result._id){
+                if(item._id===result._id){
                     return result
                 }else{
                     return item
@@ -132,7 +135,6 @@ const Home  = ()=>{
                     "Authorization": "Bearer " + localStorage.getItem("jwt")
                 },
                 body: JSON.stringify({
-                    title,
                     body,
                     pic: url
                 })
@@ -143,8 +145,6 @@ const Home  = ()=>{
                         M.toast({ html: data.error, classes: "#c62828 red darken-3" })
                     }
                     else {
-                        setLoading(false)
-                        setTitle("")
                         setBody("")
                         setImage("")
                         setUrl("")
@@ -156,6 +156,7 @@ const Home  = ()=>{
                         }).then(res => res.json())
                             .then(result => {
                                 // console.log(result)
+                                hideLoader()
                                 setData(result.posts)
 
                             })
@@ -167,7 +168,7 @@ const Home  = ()=>{
     }, [url])
 
     const postDetails = () => {
-        setLoading(true)
+        showLoader()
         const data = new FormData()
         data.append("file", image)
         data.append("upload_preset", "insta")
@@ -187,15 +188,9 @@ const Home  = ()=>{
 
    return (
      <div className="home">
+
        <div className="createpost">
          <div className="card createpost_card">
-           <input
-             type="text"
-             placeholder="title"
-             value={title}
-             onChange={(e) => setTitle(e.target.value)}
-           />
-           <br />
            <input
              type="text"
              placeholder="body"
@@ -235,36 +230,30 @@ const Home  = ()=>{
                  {item.postedBy.name}
                </Link>
 
-               {item.postedBy._id == state._id && (
-                 <i
-                   className="fas fa-trash"
-                   style={{
-                     float: "right",
-                   }}
-                   onClick={() => deletePost(item._id)}
-                 ></i>
+               {item.postedBy._id === state._id && (
+                 
+                 <IconButton onClick={() => deletePost(item._id)} style={{float:"right"}}>
+                   <DeleteIcon/>
+                 </IconButton>
                )}
              </h5>
              <p className="card-text">
-               <h6>{item.title}</h6>
-               {item.body}
+               <i>{item.body}</i>
              </p>
              <img className="card-img-top" src={item.photo} alt="uploaded" />
              <div className="card-body">
                {item.likes.includes(state._id) ? (
-                 <i
-                   className="far fa-thumbs-down"
-                   onClick={() => {
+                 <IconButton onClick={() => {
                      unlikePost(item._id);
-                   }}
-                 ></i>
+                   }}>
+                   <ThumbDownIcon/>
+                 </IconButton>
                ) : (
-                 <i
-                   className="far fa-thumbs-up"
-                   onClick={() => {
+                 <IconButton onClick={() => {
                      likePost(item._id);
-                   }}
-                 ></i>
+                   }}>
+                   <ThumbUpIcon/>
+                 </IconButton>
                )}
 
                <h6>{item.likes.length} likes</h6>
@@ -302,6 +291,7 @@ const Home  = ()=>{
            </div>
          )
         })}
+        {loader}
      </div>
    )
 }

@@ -1,9 +1,9 @@
+/* eslint-disable */
 import React,{useState,useEffect} from 'react'
 import {Link,useHistory} from 'react-router-dom'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import M from 'materialize-css'
 import "./SignUp.css";
+import useLoader from '../Loader/useLoader';
 
 const SignIn  = ()=>{
     const history = useHistory()
@@ -12,19 +12,23 @@ const SignIn  = ()=>{
     const [email,setEmail] = useState("")
     const [image,setImage] = useState("")
     const [dob,setDob] = useState("")
-    const [loading, setLoading] = useState(false)
+    const [gender,setGender] = useState("")
     const [url,setUrl] = useState(undefined)
+
+    const [loader,showLoader,hideLoader]=useLoader()
+    
     useEffect(()=>{
         if(url){
             uploadFields()
             document.addEventListener('DOMContentLoaded', function () {
-                var elems = document.querySelectorAll('select');
+                //var elems = document.querySelectorAll('select');
                 // var instances = M.FormSelect.init(elems, options);
             });
         }
     },[url])
+
+
     const uploadPic = ()=>{
-        
         const data = new FormData()
         data.append("file",image)
         data.append("upload_preset","insta")
@@ -41,6 +45,7 @@ const SignIn  = ()=>{
             console.log(err)
         })
     }
+
     const uploadFields = ()=>{
         if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
             M.toast({html: "invalid email",classes:"#c62828 red darken-3"})
@@ -56,7 +61,7 @@ const SignIn  = ()=>{
                 password,
                 email,
                 pic:url,
-                dob
+                gender
             })
         }).then(res=>res.json())
         .then(data=>{
@@ -65,15 +70,17 @@ const SignIn  = ()=>{
            }
            else{
             //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
-                setLoading(false)
+                hideLoader()
                 history.push('/signin')
            }
         }).catch(err=>{
             console.log(err)
         })
     }
+
+
     const PostData = ()=>{
-        setLoading(true)
+        showLoader()
         if(image){
             uploadPic()
         }else{
@@ -85,51 +92,99 @@ const SignIn  = ()=>{
    return (
      <div className="signup">
        <div className="card signup_card">
-           <h2>StackUnderFlow</h2>
-           <br/>
-           <input
-             type="text"
-             placeholder="name"
-             value={name}
-             onChange={(e) => setName(e.target.value)}
-           />
-           <br/>
-           <input
-             type="text"
-             placeholder="email"
-             value={email}
-             onChange={(e) => setEmail(e.target.value)}
-           />
-           <br/>
-           <input
-             type="password"
-             placeholder="password"
-             value={password}
-             onChange={(e) => setPasword(e.target.value)}
-           />
-           <br/>
-           <DatePicker
-             selected={dob}
-             onChange={(date) => setDob(date)}
-             placeholderText="DOB"
-             isClearable
-             showMonthDropdown
-             showYearDropdown
-           />
-           <br/>
-            <p>
-            Already have an account? &nbsp;
-            <Link to="/signin">SignIn</Link>
-          </p>
-
-           <button
-             type="button" className="btn btn-primary"
-             onClick={() => PostData()}
-           >
-            SignUp
-           </button>
+         <h2>NSEC Social</h2>
+         <br />
+         <input
+           type="text"
+           placeholder="name"
+           value={name}
+           onChange={(e) => setName(e.target.value)}
+         />
+         <br />
+         <input
+           type="text"
+           placeholder="email"
+           value={email}
+           onChange={(e) => setEmail(e.target.value)}
+         />
+         <br />
+         <input
+           type="password"
+           placeholder="password"
+           value={password}
+           onChange={(e) => setPasword(e.target.value)}
+         />
+         <br />
+         <div className="row" onChange={(e) => setGender(e.target.value)}>
+           <div className="col">
+             <div className="form-check">
+               <input
+                 className="form-check-input"
+                 type="radio"
+                 name="gender"
+                 id="exampleRadios1"
+                 value="male"
+               />
+               Male
+             </div>
+           </div>
+           <div className="col">
+             <div className="form-check">
+               <input
+                 className="form-check-input"
+                 type="radio"
+                 name="gender"
+                 id="exampleRadios2"
+                 value="female"
+               />
+               Female
+             </div>
+           </div>
          </div>
+         <br />
+         <div className="row">
+           <div className="col">
+             <select className="form-control" id="exampleFormControlSelect1">
+               <option selected>Role</option>
+               <option value="faculty">Faculty</option>
+               <option value="Student">Student</option>
+             </select>
+           </div>
+           <div className="col">
+             <select className="form-control" id="exampleFormControlSelect1">
+               <option selected>Department</option>
+               <option value="cse">CSE</option>
+               <option value="it">IT</option>
+               <option value="ee">EE</option>
+               <option value="ece">ECE</option>
+               <option value="civil">CIVIL</option>
+               <option value="mech">Mech</option>
+             </select>
+           </div>
+         </div>
+         <br />
+         {/* <input
+           type="file"
+           className="form-control-file"
+           id="exampleFormControlFile1"
+           onChange={(e) => setImage(e.target.files[0])}
+         />
+         <br /> */}
+         <p>
+           Already have an account? &nbsp;
+           <Link to="/signin">SignIn</Link>
+         </p>
+
+         <button
+           type="button"
+           className="btn btn-primary"
+           onClick={() => PostData()}
+         >
+           SignUp
+         </button>
        </div>
+       {loader}
+     </div>
    );
 }
 

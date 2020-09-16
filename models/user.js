@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    dob:{
+    gender:{
         type:String,
         required:true
     },
@@ -24,8 +24,8 @@ const userSchema = new mongoose.Schema({
     resetToken:String,
     expireToken:Date,
     pic:{
-     type:String,
-     default:"https://res.cloudinary.com/cnq/image/upload/v1586197723/noimage_d4ipmd.png"
+        type:String,
+        default:"https://static.thenounproject.com/png/363640-200.png"
     },
     followers:[{type:ObjectId,ref:"User"}],
     following:[{type:ObjectId,ref:"User"}]

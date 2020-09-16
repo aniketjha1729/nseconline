@@ -4,7 +4,7 @@
     margin: 20px auto;
     max-width: 400px;
     border-radius: 10px;
-    box-shadow: 5px 10px 20px #888888
+    /* box-shadow: 5px 10px 20px #888888 */
 }
 .home_card{
     max-width: 600px;
@@ -12,5 +12,11 @@
 }
 .home_comments{
     width: 100%;
-
+}
+button:focus {
+    outline: 0;
+    outline: 0;
+}
+a:hover{
+    text-decoration: none;
 }
