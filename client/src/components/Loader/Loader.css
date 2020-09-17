@@ -4,11 +4,23 @@
     height: 100%;
     top: 0;
     left: 0;
-    background-color: #f8f8f8ad;
+    background-color: #dadada79;
 }
 .fp-loader{
-    top: 50%;
-    left: 48%;
+    top: 45%;
+    margin-left: 43%;
     z-index: 1000;
     position: absolute;
+    width: 150px;
+    height: 150px;
+}
+@media screen and (max-width: 600px) {
+  .fp-loader {
+    top: 30%;
+    margin-left: 30%;
+    z-index: 1000;
+    position: absolute;
+    width: 150px;
+    height: 150px;
+  }
 }

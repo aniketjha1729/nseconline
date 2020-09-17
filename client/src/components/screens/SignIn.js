@@ -10,7 +10,7 @@ const SignIn  = ()=>{
     const history = useHistory()
     const [password,setPasword] = useState("aniket")
     const [email,setEmail] = useState("aniket@gmail.com")
-    const [loader, showLoader, hideLoader] = useLoader();
+    const [loader, showLoader, hideLoader] = useLoader()
     const PostData = ()=>{
         showLoader();
         if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){

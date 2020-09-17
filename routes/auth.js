@@ -20,12 +20,12 @@ const transporter = nodemailer.createTransport(sendgridTransport({
 }))
 
 router.post('/signup',(req,res)=>{
-  const {name,email,password,pic,gender} = req.body 
-  if(!email || !password || !name ||!gender ){
+  const {name,email,password,pic,gender,role,department} = req.body 
+  if(!email || !password || !name || !gender || !role || !department){
      return res.status(422).json({error:"please add all the fields"})
   }
   User.findOne({email:email})
-  .then((savedUser)=>{
+  .then((savedUser)=>{ 
       if(savedUser){
         return res.status(422).json({error:"user already exists with that email"})
       }
@@ -36,7 +36,9 @@ router.post('/signup',(req,res)=>{
                 password:hashedpassword,
                 name,
                 pic,
-                gender
+                gender,
+                role,
+                department
                 
             })
     

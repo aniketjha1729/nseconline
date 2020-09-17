@@ -14,6 +14,8 @@ const SignIn  = ()=>{
     const [dob,setDob] = useState("")
     const [gender,setGender] = useState("")
     const [url,setUrl] = useState(undefined)
+    const [role,setRole]=useState("")
+    const [department,setDepartment]=useState("")
 
     const [loader,showLoader,hideLoader]=useLoader()
     
@@ -51,31 +53,34 @@ const SignIn  = ()=>{
             M.toast({html: "invalid email",classes:"#c62828 red darken-3"})
             return
         }
-        fetch("/signup",{
-            method:"post",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                name,
-                password,
-                email,
-                pic:url,
-                gender
-            })
-        }).then(res=>res.json())
-        .then(data=>{
-           if(data.error){
-              M.toast({html: data.error,classes:"#c62828 red darken-3"})
-           }
-           else{
-            //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
-                hideLoader()
-                history.push('/signin')
-           }
-        }).catch(err=>{
-            console.log(err)
+        fetch("/signup", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            password,
+            email,
+            pic: url,
+            gender,
+            role,
+            department
+          }),
         })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              M.toast({ html: data.error, classes: "#c62828 red darken-3" });
+            } else {
+              //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
+              hideLoader();
+              history.push("/signin");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
     }
 
 
@@ -144,15 +149,23 @@ const SignIn  = ()=>{
          <br />
          <div className="row">
            <div className="col">
-             <select className="form-control" id="exampleFormControlSelect1">
-               <option selected>Role</option>
+             <select
+               className="form-control"
+               id="exampleFormControlSelect1"
+               onChange={(e) => setRole(e.target.value)}
+             >
+               <option defaultValue="Role">Role</option>
                <option value="faculty">Faculty</option>
                <option value="Student">Student</option>
              </select>
            </div>
            <div className="col">
-             <select className="form-control" id="exampleFormControlSelect1">
-               <option selected>Department</option>
+             <select
+               className="form-control"
+               id="exampleFormControlSelect1"
+               onChange={(e) => setDepartment(e.target.value)}
+             >
+               <option defaultValue="Department">Department</option>
                <option value="cse">CSE</option>
                <option value="it">IT</option>
                <option value="ee">EE</option>

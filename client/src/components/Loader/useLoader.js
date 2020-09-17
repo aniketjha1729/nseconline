@@ -11,5 +11,4 @@ function useLoader() {
         
     
 }
-
 export default useLoader

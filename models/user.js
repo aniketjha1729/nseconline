@@ -17,9 +17,13 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    branch:{
+    department:{
         type:String,
-        
+        required:true
+    },
+    role:{
+        type:String,
+        required:true
     },
     resetToken:String,
     expireToken:Date,

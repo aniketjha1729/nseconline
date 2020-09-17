@@ -2,12 +2,13 @@
 import React,{useEffect,useState,useContext} from 'react'
 import {UserContext} from '../../App'
 import "./Profile.css"
-import { json } from 'body-parser'
+import useLoader from "../Loader/useLoader";
 
 const Profile  = ()=>{
     const [mypics,setPics] = useState([])
     const {state,dispatch} = useContext(UserContext)
     const [image,setImage] = useState("")
+    const [loader, showLoader, hideLoader] = useLoader();
     useEffect(()=>{
        fetch('/mypost',{
            headers:{
@@ -45,7 +46,8 @@ const Profile  = ()=>{
             })
           }).then(res=>res.json())
           .then(result=>{
-            console.log(result)
+            // console.log(result)
+            hideLoader()
             localStorage.setItem("user",JSON.stringify({...state,pic:result.pic}))
             dispatch({ type:"UPDATEPIC",payload:result.pic})
           })
@@ -57,6 +59,7 @@ const Profile  = ()=>{
     },[image])
 
     const updatePhoto = (file)=>{
+        showLoader()
         setImage(file)
     }
 
@@ -65,16 +68,16 @@ const Profile  = ()=>{
        <div className="profile_details">
          <div className="row">
            <div className="col-4">
-            <div className="row">
-              <div className="col">
+             <div className="row">
+               <div className="col">
                  <img
                    className="profile_image"
                    alt="profilepic"
                    src={state ? state.pic : ""}
                  />
-              </div>
-            </div>
-            <div className="row">
+               </div>
+             </div>
+             <div className="row">
                <div className="col">
                  <input
                    type="file"
@@ -82,10 +85,8 @@ const Profile  = ()=>{
                    id="exampleFormControlFile1"
                    onChange={(e) => updatePhoto(e.target.files[0])}
                  />
-                </div>
-            </div>
-             
-              
+               </div>
+             </div>
            </div>
            <div className="col-8">
              <div className="row">
@@ -134,6 +135,7 @@ const Profile  = ()=>{
            })}
          </div>
        </div>
+       {loader}
      </div>
    );
 }

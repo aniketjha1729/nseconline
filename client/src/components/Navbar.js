@@ -5,6 +5,7 @@ import {UserContext} from '../App'
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from "@material-ui/core";
 import M from 'materialize-css'
+import "./screens/Navbar.css";
 const NavBar = ()=>{
     
      const [search,setSearch] = useState("")

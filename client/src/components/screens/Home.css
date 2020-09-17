@@ -13,10 +13,22 @@
 .home_comments{
     width: 100%;
 }
+.userProfilePic{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
 button:focus {
     outline: 0;
     outline: 0;
 }
 a:hover{
     text-decoration: none;
+}
+.postTitle{
+    margin-left: 2%;
+}
+.postUser{
+    margin-top: 5%;
+    margin-left: 2%;
 }

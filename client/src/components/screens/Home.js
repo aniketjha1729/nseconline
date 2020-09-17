@@ -25,11 +25,11 @@ const Home  = ()=>{
        }).then(res=>res.json())
        .then(result=>{
         //    console.log(localStorage.getItem("user").name);
-            // console.log(result.name)
+            console.log(result)
            setData(result.posts)
            
        })
-    },[url])
+    },[url,data])
 
     const likePost = (id)=>{
           fetch('/like',{
@@ -219,7 +219,8 @@ const Home  = ()=>{
        {data.map((item) => {
          return (
            <div className="card home_card" key={item._id}>
-             <h5 className="card-title">
+             <h5 className="card-title postUser">
+              <img src={item.postedBy.pic} alt="" className="userProfilePic"/> &nbsp;
                <Link
                  to={
                    item.postedBy._id !== state._id
@@ -237,7 +238,7 @@ const Home  = ()=>{
                  </IconButton>
                )}
              </h5>
-             <p className="card-text">
+             <p className="card-text postTitle">
                <i>{item.body}</i>
              </p>
              <img className="card-img-top" src={item.photo} alt="uploaded" />
