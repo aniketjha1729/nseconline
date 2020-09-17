@@ -45,6 +45,9 @@ const SignIn  = ()=>{
             console.log(err)
         })
     }
+    const gotoSignUp=()=>{
+      history.push("/signup")
+    }
    return (
      <div className="signin">
        <div className="card signin_card">
@@ -70,6 +73,16 @@ const SignIn  = ()=>{
          >
            SignIn
          </button>
+         <br />
+         
+         <button
+           type="button"
+           className="btn btn-success"
+           onClick={() => gotoSignUp()}
+         >
+           Create an Account
+         </button>
+         
        </div>
        {loader}
      </div>

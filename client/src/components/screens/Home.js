@@ -25,7 +25,7 @@ const Home  = ()=>{
        }).then(res=>res.json())
        .then(result=>{
         //    console.log(localStorage.getItem("user").name);
-            console.log(result)
+            // console.log(result)
            setData(result.posts)
            
        })
