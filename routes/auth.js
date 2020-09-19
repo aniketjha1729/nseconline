@@ -6,18 +6,19 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {JWT_SECRET} = require('../config/keys')
-const requireLogin = require('../middleware/requireLogin')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 const {SENDGRID_API,EMAIL} = require('../config/keys')
 //
 
-
-const transporter = nodemailer.createTransport(sendgridTransport({
-    auth:{
-        api_key:SENDGRID_API
-    }
-}))
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        SENDGRID_API
+    },
+  })
+);
 
 router.post('/signup',(req,res)=>{
   const {name,email,password,pic,gender,role,department} = req.body 
@@ -45,7 +46,12 @@ router.post('/signup',(req,res)=>{
             user.save()
             .then(succes => {
                 const {_id}=succes
-                //res.json(_id)
+                transporter.sendMail({
+                    to:user.email,
+                    from:EMAIL,
+                    subject:"Welcome",
+                    html:"<h1>Welcome here</h1>"
+                }) 
                 User.findByIdAndUpdate(_id,{
                     $push: { following:_id }
                 },{
@@ -74,12 +80,12 @@ router.post('/signup',(req,res)=>{
 router.post('/signin',(req,res)=>{
     const {email,password} = req.body
     if(!email || !password){
-       return res.status(422).json({error:"please add email or password"})
+       return res.status(422).json({error:"Please add all the fields!"})
     }
     User.findOne({email:email})
     .then(savedUser=>{
         if(!savedUser){
-           return res.status(422).json({error:"Invalid Email or password"})
+           return res.status(422).json({error:"Email not found!"})
         }
         bcrypt.compare(password,savedUser.password)
         .then(doMatch=>{
@@ -90,7 +96,7 @@ router.post('/signin',(req,res)=>{
                res.json({token,user:{_id,name,email,followers,following,pic,gender}})
             }
             else{
-                return res.status(422).json({error:"Invalid Email or password"})
+                return res.status(422).json({error:"Invalid Email or password!"})
             }
         })
         .catch(err=>{
@@ -109,21 +115,18 @@ router.post('/reset-password',(req,res)=>{
          User.findOne({email:req.body.email})
          .then(user=>{
              if(!user){
-                 return res.status(422).json({error:"User dont exists with that email"})
+                 return res.status(422).json({error:"User does not exists with this email"})
              }
              user.resetToken = token
              user.expireToken = Date.now() + 3600000
              user.save().then((result)=>{
                  transporter.sendMail({
-                     to:user.email,
-                     from:"no-replay@insta.com",
-                     subject:"password reset",
-                     html:`
-                     <p>You requested for password reset</p>
-                     <h5>click in this <a href="${EMAIL}/reset/${token}">link</a> to reset password</h5>
-                     `
-                 })
-                 res.json({message:"check your email"})
+                   to: user.email,
+                   from: "noreply@nsec.com",
+                   subject: "Password Reset",
+                   html: `<p>Click The Link To reser the password</p><a href="http://localhost:3000/reset/${token}">Link</a>`
+                     
+                 }).then(res.json({message:"A verivation link has been send to your email."}))
              })
 
          })

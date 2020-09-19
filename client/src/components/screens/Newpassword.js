@@ -2,11 +2,12 @@
 import React,{useState,useContext,} from 'react'
 import {Link,useHistory,useParams} from 'react-router-dom'
 import M from 'materialize-css'
-const SignIn  = ()=>{
+import "./SignIn.css"
+const NewPassword  = ()=>{
     const history = useHistory()
     const [password,setPasword] = useState("")
     const {token} = useParams()
-    console.log(token)
+    //console.log(token)
     const PostData = ()=>{
         fetch("/new-password",{
             method:"post",
@@ -33,26 +34,29 @@ const SignIn  = ()=>{
         })
     }
    return (
-      <div className="mycard">
-          <div className="card auth-card input-field">
-            <h2>StackUnderFlow</h2>
-        
-            <input
-            type="password"
-            placeholder="enter a new password"
-            value={password}
-            onChange={(e)=>setPasword(e.target.value)}
-            />
-            <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
-            onClick={()=>PostData()}
-            >
-               Update password
-            </button>
-    
-        </div>
-      </div>
-   )
+     <div className="signin">
+       <div className="card signin_card">
+         <h2>NSEC Social</h2>
+         <br/>
+         <input
+           type="password"
+           placeholder="password"
+           value={password}
+           onChange={(e) => setPasword(e.target.value)}
+         />
+         <br />
+         <button
+           type="button"
+           className="btn btn-primary"
+           onClick={() => PostData()}
+         >
+           Upadte
+         </button>
+         <br />
+       </div>
+     </div>
+   );
 }
 
 
-export default SignIn
+export default NewPassword;

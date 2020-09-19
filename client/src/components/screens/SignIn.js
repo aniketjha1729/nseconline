@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React,{useState,useContext,} from 'react'
-import {useHistory} from 'react-router-dom'
+import {useHistory,Link} from 'react-router-dom'
 import {UserContext} from '../../App'
 import "./SignIn.css";
 import M from 'materialize-css'
@@ -11,10 +11,12 @@ const SignIn  = ()=>{
     const [password,setPasword] = useState("aniket")
     const [email,setEmail] = useState("aniket@gmail.com")
     const [loader, showLoader, hideLoader] = useLoader()
+    const [errormsg, setErrormsg] = useState("")
     const PostData = ()=>{
-        showLoader();
+        showLoader()
         if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
-            M.toast({html: "invalid email",classes:"#c62828 red darken-3"})
+            setErrormsg("Invalid Email")
+            hideLoader();
             return
         }
         fetch("/signin",{
@@ -28,30 +30,51 @@ const SignIn  = ()=>{
             })
         }).then(res=>res.json())
         .then(data=>{
-            // console.log(data)
-           if(data.error){
-              M.toast({html: data.error,classes:"#c62828 red darken-3"})
-           }
-           else{
-               
+            if(data.error===undefined){
                localStorage.setItem("jwt",data.token)
                localStorage.setItem("user",JSON.stringify(data.user))
                dispatch({type:"USER",payload:data.user})
-               M.toast({html:"signedin success",classes:"#43a047 green darken-1"})
-               hideLoader();
                history.push('/')
-           }
+            }else{
+              setErrormsg(data.error)
+              hideLoader()
+            }
+           
         }).catch(err=>{
             console.log(err)
         })
     }
+
     const gotoSignUp=()=>{
       history.push("/signup")
     }
+    
+  
+
    return (
      <div className="signin">
        <div className="card signin_card">
          <h2>NSEC Social</h2>
+         <br />
+         {errormsg ? (
+           <div
+             class="alert alert-danger alert-dismissible fade show"
+             role="alert"
+           >
+             {errormsg}
+             <button
+               type="button"
+               class="close"
+               data-dismiss="alert"
+               aria-label="Close"
+               onClick={() => setErrormsg("")}
+             >
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+         ) : (
+           ""
+         )}
          <input
            type="text"
            placeholder="email"
@@ -66,6 +89,8 @@ const SignIn  = ()=>{
            onChange={(e) => setPasword(e.target.value)}
          />
          <br />
+         <Link to="/reset">Forgot Password?</Link>
+         <br />
          <button
            type="button"
            className="btn btn-primary"
@@ -74,7 +99,7 @@ const SignIn  = ()=>{
            SignIn
          </button>
          <br />
-         
+
          <button
            type="button"
            className="btn btn-success"
@@ -82,7 +107,6 @@ const SignIn  = ()=>{
          >
            Create an Account
          </button>
-         
        </div>
        {loader}
      </div>

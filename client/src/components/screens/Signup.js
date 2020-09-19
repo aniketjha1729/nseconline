@@ -10,95 +10,108 @@ const SignIn  = ()=>{
     const [name,setName] = useState("")
     const [password,setPasword] = useState("")
     const [email,setEmail] = useState("")
-    const [image,setImage] = useState("")
-    const [dob,setDob] = useState("")
     const [gender,setGender] = useState("")
-    const [url,setUrl] = useState(undefined)
     const [role,setRole]=useState("")
     const [department,setDepartment]=useState("")
-
+    const [errormsg, setErrormsg] = useState("");
     const [loader,showLoader,hideLoader]=useLoader()
     
-    useEffect(()=>{
-        if(url){
-            uploadFields()
-            document.addEventListener('DOMContentLoaded', function () {
-                //var elems = document.querySelectorAll('select');
-                // var instances = M.FormSelect.init(elems, options);
-            });
-        }
-    },[url])
+    // useEffect(()=>{
+    //     if(url){
+    //         uploadFields()
+    //         document.addEventListener('DOMContentLoaded', function () {
+    //             //var elems = document.querySelectorAll('select');
+    //             // var instances = M.FormSelect.init(elems, options);
+    //         });
+    //     }
+    // },[url])
 
 
-    const uploadPic = ()=>{
-        const data = new FormData()
-        data.append("file",image)
-        data.append("upload_preset","insta")
-        data.append("cloud_name","aniketjha172")
-        fetch("https://api.cloudinary.com/v1_1/aniketjha172/image/upload",{
-            method:"post",
-            body:data
+    // const uploadPic = ()=>{
+    //     const data = new FormData()
+    //     data.append("file",image)
+    //     data.append("upload_preset","insta")
+    //     data.append("cloud_name","aniketjha172")
+    //     fetch("https://api.cloudinary.com/v1_1/aniketjha172/image/upload",{
+    //         method:"post",
+    //         body:data
+    //     })
+    //     .then(res=>res.json())
+    //     .then(data=>{
+    //        setUrl(data.url)
+    //     })
+    //     .catch(err=>{
+    //         console.log(err)
+    //     })
+    // }
+
+    const PostData = () => {
+      if (
+        !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          email
+        )
+      ) {
+        // M.toast({ html: "invalid email", classes: "#c62828 red darken-3" });
+        setErrormsg("Invalid Email")
+        return;
+      }
+      fetch("/signup", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          password,
+          email,
+          gender,
+          role,
+          department
         })
-        .then(res=>res.json())
-        .then(data=>{
-           setUrl(data.url)
+      }).then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.error) {
+            //M.toast({ html: data.error, classes: "#c62828 red darken-3" });
+            setErrormsg(data.error)
+          } else {
+            //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
+            hideLoader();
+            history.push("/signin");
+          }
         })
-        .catch(err=>{
-            console.log(err)
-        })
-    }
-
-    const uploadFields = ()=>{
-        if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
-            M.toast({html: "invalid email",classes:"#c62828 red darken-3"})
-            return
-        }
-        fetch("/signup", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            password,
-            email,
-            pic: url,
-            gender,
-            role,
-            department
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.error) {
-              M.toast({ html: data.error, classes: "#c62828 red darken-3" });
-            } else {
-              //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
-              hideLoader();
-              history.push("/signin");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-    }
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
 
-    const PostData = ()=>{
-        showLoader()
-        if(image){
-            uploadPic()
-        }else{
-            uploadFields()
-        }
-       
-    }
+    
 
    return (
      <div className="signup">
        <div className="card signup_card">
          <h2>NSEC Social</h2>
          <br />
+         {errormsg ? (
+           <div
+             class="alert alert-danger alert-dismissible fade show"
+             role="alert"
+           >
+             {errormsg}
+             <button
+               type="button"
+               class="close"
+               data-dismiss="alert"
+               aria-label="Close"
+               onClick={()=>setErrormsg("")}
+             >
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+         ) : (
+           ""
+         )}
          <input
            type="text"
            placeholder="name"
@@ -183,10 +196,7 @@ const SignIn  = ()=>{
            onChange={(e) => setImage(e.target.files[0])}
          />
          <br /> */}
-         <p>
-           Already have an account? &nbsp;
-           <Link to="/signin">SignIn</Link>
-         </p>
+         
 
          <button
            type="button"

@@ -13,6 +13,8 @@ import UserProfile from './components/screens/UserProfile'
 import SubscribedUserPosts from './components/screens/SubscribesUserPosts'
 import Reset from './components/screens/Reset'
 import NewPassword from './components/screens/Newpassword'
+
+
 export const UserContext = createContext()
 
 
@@ -28,10 +30,10 @@ const Routing = ()=>{
            history.push('/signin')
     }
   },[])
-  return(
+  return (
     <Switch>
-      <Route exact path="/" >
-      <Home />
+      <Route exact path="/">
+        <Home />
       </Route>
       <Route path="/signin">
         <Signin />
@@ -43,7 +45,7 @@ const Routing = ()=>{
         <Profile />
       </Route>
       <Route path="/create">
-        <CreatePost/>
+        <CreatePost />
       </Route>
       <Route path="/profile/:userid">
         <UserProfile />
@@ -52,13 +54,14 @@ const Routing = ()=>{
         <SubscribedUserPosts />
       </Route>
       <Route exact path="/reset">
-        <Reset/>
+        <Reset />
       </Route>
       <Route path="/reset/:token">
         <NewPassword />
       </Route>
+      
     </Switch>
-  )
+  );
 }
 
 function App() {
