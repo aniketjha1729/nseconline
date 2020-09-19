@@ -5,17 +5,15 @@ const User = mongoose.model("User")
 const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const {JWT_SECRET} = require('../config/keys')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
-const {SENDGRID_API,EMAIL} = require('../config/keys')
-//
+const { SENDGRID_API, EMAIL, JWT_SECRET } = require("../config/keys");
+
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
-      api_key:
-        SENDGRID_API
+      api_key:SENDGRID_API,
     },
   })
 );
@@ -36,7 +34,6 @@ router.post('/signup',(req,res)=>{
                 email,
                 password:hashedpassword,
                 name,
-                pic,
                 gender,
                 role,
                 department
@@ -48,7 +45,7 @@ router.post('/signup',(req,res)=>{
                 const {_id}=succes
                 transporter.sendMail({
                     to:user.email,
-                    from:EMAIL,
+                    from:"noreply@nsec.com",
                     subject:"Welcome",
                     html:"<h1>Welcome here</h1>"
                 }) 
@@ -123,7 +120,7 @@ router.post('/reset-password',(req,res)=>{
                  transporter
                    .sendMail({
                      to: user.email,
-                     from: "noreply@nsec.com",
+                     from: EMAIL,
                      subject: "Password Reset",
                      html: `<p>Click The Link To reser the password</p><a href="https://nseconline.herokuapp.com/reset/${token}">Link</a>`,
                    })

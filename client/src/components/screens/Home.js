@@ -16,6 +16,7 @@ const Home  = ()=>{
     const [image, setImage] = useState("")
     const [url, setUrl] = useState("")
     const [loader, showLoader, hideLoader] = useLoader();
+    
     useEffect(()=>{
         
        fetch('/allpost',{
@@ -24,9 +25,7 @@ const Home  = ()=>{
            }
        }).then(res=>res.json())
        .then(result=>{
-        //    console.log(localStorage.getItem("user").name);
-            // console.log(result)
-           setData(result.posts)
+          setData(result.posts)
            
        })
     },[url,data])
@@ -69,7 +68,6 @@ const Home  = ()=>{
               })
           }).then(res=>res.json())
           .then(result=>{
-            //   console.log(result)
             const newData = data.map(item=>{
                 if(item._id===result._id){
                     return result

@@ -3,12 +3,12 @@ import React, { useState} from "react";
 import { useHistory } from "react-router-dom";
 import useLoader from "../Loader/useLoader";
 import "./SignIn.css";
-import M from "materialize-css";
+
 
 const Reset = () => {
   
   const history = useHistory();
-   const [loader, showLoader, hideLoader] = useLoader();
+  const [loader, showLoader, hideLoader] = useLoader();
   const [email, setEmail] = useState("")
   const [errormsg, setErrormsg] = useState("")
   const [successmsg, setSuccessmsg] = useState("")

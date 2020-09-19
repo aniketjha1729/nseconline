@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React,{useState,useEffect} from 'react'
 import {Link,useHistory} from 'react-router-dom'
-import M from 'materialize-css'
 import "./SignUp.css";
 import useLoader from '../Loader/useLoader';
 
@@ -46,13 +45,14 @@ const SignIn  = ()=>{
     // }
 
     const PostData = () => {
+      showLoader()
       if (
         !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
           email
         )
       ) {
-        // M.toast({ html: "invalid email", classes: "#c62828 red darken-3" });
         setErrormsg("Invalid Email")
+        hideLoader()
         return;
       }
       fetch("/signup", {
@@ -72,11 +72,10 @@ const SignIn  = ()=>{
         .then((data) => {
           console.log(data);
           if (data.error) {
-            //M.toast({ html: data.error, classes: "#c62828 red darken-3" });
             setErrormsg(data.error)
+            hideLoader()
           } else {
-            //    M.toast({html:data.message,classes:"#43a047 green darken-1"})
-            hideLoader();
+            hideLoader()
             history.push("/signin");
           }
         })
