@@ -120,13 +120,19 @@ router.post('/reset-password',(req,res)=>{
              user.resetToken = token
              user.expireToken = Date.now() + 3600000
              user.save().then((result)=>{
-                 transporter.sendMail({
-                   to: user.email,
-                   from: "noreply@nsec.com",
-                   subject: "Password Reset",
-                   html: `<p>Click The Link To reser the password</p><a href="http://localhost:3000/reset/${token}">Link</a>`
-                     
-                 }).then(res.json({message:"A verivation link has been send to your email."}))
+                 transporter
+                   .sendMail({
+                     to: user.email,
+                     from: "noreply@nsec.com",
+                     subject: "Password Reset",
+                     html: `<p>Click The Link To reser the password</p><a href="https://nseconline.herokuapp.com/reset/${token}">Link</a>`,
+                   })
+                   .then(
+                     res.json({
+                       message:
+                         "A verivation link has been send to your email.",
+                     })
+                   );
              })
 
          })
